@@ -21,7 +21,8 @@
   height: 60px;
   width: auto;
   object-fit: contain;
-  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
+  display: block;
 }
 
 .login-box h1 {
