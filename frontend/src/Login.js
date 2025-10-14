@@ -9,7 +9,7 @@ function Login({ onLogin }) {
     e.preventDefault();
 
     // Check password against environment variable or hardcoded value
-    const correctPassword = process.env.REACT_APP_PASSWORD || 'McGraw2025!';
+    const correctPassword = process.env.REACT_APP_PASSWORD || 'alwaysbeclosing';
 
     if (password === correctPassword) {
       // Store authentication in sessionStorage (lasts until browser closes)
