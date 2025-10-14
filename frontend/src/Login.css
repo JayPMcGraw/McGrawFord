@@ -1,12 +1,13 @@
 .login-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   padding: 20px;
+  padding-bottom: 80px;
   position: relative;
 }
 
