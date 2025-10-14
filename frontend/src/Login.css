@@ -3,18 +3,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4a5568;
+  background-image: url('/ford-login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 20px;
+  position: relative;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .login-box {
-  background: #d3d3d3;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   max-width: 400px;
   width: 100%;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .login-logo {

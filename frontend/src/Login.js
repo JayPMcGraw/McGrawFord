@@ -27,9 +27,6 @@ function Login({ onLogin }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <img src="/mcgraw-logo.avif" alt="McGraw Motors" className="login-logo" />
-        <h1>McGraw Motors</h1>
-        <h2>Sales Dashboard</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="password">Enter Password</label>
