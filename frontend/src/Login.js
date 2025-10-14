@@ -4,19 +4,21 @@ import './Login.css';
 function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Check password against environment variable or hardcoded value
     const correctPassword = process.env.REACT_APP_PASSWORD || 'alwaysbeclosing';
-    console.log('Expected password:', correctPassword);
-    console.log('Entered password:', password);
 
     if (password === correctPassword) {
-      // Store authentication in sessionStorage (lasts until browser closes)
-      sessionStorage.setItem('isAuthenticated', 'true');
-      onLogin(true);
+      // Store authentication based on Remember Me preference
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem('isAuthenticated', 'true');
+      storage.setItem('authVersion', '2.0');
+
+      onLogin(true, rememberMe);
       setError('');
     } else {
       setError('Incorrect password. Please try again.');
@@ -39,6 +41,16 @@ function Login({ onLogin }) {
               autoFocus
               required
             />
+          </div>
+          <div className="form-group checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <span>Remember me</span>
+            </label>
           </div>
           {error && <div className="error-message">{error}</div>}
           <button type="submit" className="login-button">

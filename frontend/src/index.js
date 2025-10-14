@@ -10,25 +10,31 @@ function Main() {
 
   // Check if user is already authenticated on mount
   useEffect(() => {
-    const authStatus = sessionStorage.getItem('isAuthenticated');
-    const authVersion = sessionStorage.getItem('authVersion');
     const currentVersion = '2.0'; // Increment this to force re-login
 
-    if (authStatus === 'true' && authVersion === currentVersion) {
+    // Check localStorage first (Remember Me), then sessionStorage
+    const localAuth = localStorage.getItem('isAuthenticated');
+    const localVersion = localStorage.getItem('authVersion');
+    const sessionAuth = sessionStorage.getItem('isAuthenticated');
+    const sessionVersion = sessionStorage.getItem('authVersion');
+
+    if (localAuth === 'true' && localVersion === currentVersion) {
+      setIsAuthenticated(true);
+    } else if (sessionAuth === 'true' && sessionVersion === currentVersion) {
       setIsAuthenticated(true);
     } else {
-      // Clear old session data
+      // Clear old session data from both storages
       sessionStorage.removeItem('isAuthenticated');
       sessionStorage.removeItem('authVersion');
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('authVersion');
     }
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (status) => {
+  const handleLogin = (status, rememberMe) => {
     setIsAuthenticated(status);
-    if (status) {
-      sessionStorage.setItem('authVersion', '2.0');
-    }
+    // Note: Storage is already set in Login component
   };
 
   if (isLoading) {
