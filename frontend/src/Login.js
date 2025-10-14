@@ -27,7 +27,10 @@ function Login({ onLogin }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <img src="/mcgraw-logo.avif" alt="McGraw Motors" className="login-logo" />
+        <div className="login-logos">
+          <img src="/mcgraw-logo.avif" alt="McGraw Motors" className="login-logo" />
+          <img src="/ford-logo.png" alt="Ford" className="ford-logo" />
+        </div>
         <h1>McGraw Motors</h1>
         <h2>Sales Dashboard</h2>
         <form onSubmit={handleSubmit}>
