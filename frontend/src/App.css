@@ -1,7 +1,28 @@
 .app {
   min-height: 100vh;
   padding: 2rem;
-  background-color: #4a5568;
+  background: radial-gradient(ellipse at center, #5a6a7a 0%, #4a5568 40%, #3a4555 100%);
+  position: relative;
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(100, 150, 200, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(120, 170, 220, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(90, 140, 190, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
 }
 
 .container {

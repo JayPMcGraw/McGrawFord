@@ -17,25 +17,11 @@
   text-align: center;
 }
 
-.login-logos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-}
-
 .login-logo {
   height: 60px;
   width: auto;
   object-fit: contain;
-}
-
-.ford-logo {
-  height: 50px;
-  width: auto;
-  object-fit: contain;
+  margin-bottom: 20px;
 }
 
 .login-box h1 {
