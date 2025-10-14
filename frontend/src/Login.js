@@ -27,7 +27,7 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container" style={{backgroundImage: 'url(/mcgraw-ford-background.jpg)'}}>
       <div className="login-box">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
