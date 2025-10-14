@@ -10,6 +10,8 @@ function Login({ onLogin }) {
 
     // Check password against environment variable or hardcoded value
     const correctPassword = process.env.REACT_APP_PASSWORD || 'alwaysbeclosing';
+    console.log('Expected password:', correctPassword);
+    console.log('Entered password:', password);
 
     if (password === correctPassword) {
       // Store authentication in sessionStorage (lasts until browser closes)
