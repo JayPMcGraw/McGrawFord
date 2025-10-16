@@ -120,7 +120,20 @@ function parseSheetData(rows, type, sheetName) {
     if (typeof rawDate === 'number') {
       date = excelDateToJSDate(rawDate);
     } else {
-      date = String(rawDate);
+      // Handle text dates including malformed formats like "1015/25" or "10/15/25"
+      const dateStr = String(rawDate);
+
+      // Check for malformed date patterns like "1015/25" (MMDD/YY)
+      if (/^\d{3,4}\/\d{2}$/.test(dateStr)) {
+        const parts = dateStr.split('/');
+        const mmdd = parts[0].padStart(4, '0'); // Ensure 4 digits
+        const mm = mmdd.substring(0, 2);
+        const dd = mmdd.substring(2, 4);
+        const yy = parts[1];
+        date = `20${yy}-${mm}-${dd}`;
+      } else {
+        date = dateStr;
+      }
     }
 
     const salesperson = String(row[14]);
@@ -196,8 +209,11 @@ function calculateMetrics(sales) {
     };
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  // Use Central Time (US/Central) for "today"
+  const now = new Date();
+  const centralDateStr = now.toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); // YYYY-MM-DD format
+  const today = centralDateStr;
+  const currentMonth = today.slice(0, 7);
 
   const todaySales = sales.filter(s => s.date.startsWith(today));
   let monthSales = sales.filter(s => s.date.startsWith(currentMonth));
