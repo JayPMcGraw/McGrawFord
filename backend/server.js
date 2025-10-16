@@ -43,13 +43,13 @@ function fetchGoogleSheet(sheetId) {
           redirectResponse.on('end', () => {
             try {
               const buffer = Buffer.concat(chunks);
-              const workbook = XLSX.read(buffer, { type: 'buffer' });
+              const workbook = XLSX.read(buffer, { type: 'buffer', sheetRows: 200 });
 
               // Read ALL sheets/tabs and combine data
               const allData = [];
               workbook.SheetNames.forEach(sheetName => {
                 const sheet = workbook.Sheets[sheetName];
-                const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
                 allData.push({ sheetName, data: sheetData });
               });
 
@@ -69,13 +69,13 @@ function fetchGoogleSheet(sheetId) {
         response.on('end', () => {
           try {
             const buffer = Buffer.concat(chunks);
-            const workbook = XLSX.read(buffer, { type: 'buffer' });
+            const workbook = XLSX.read(buffer, { type: 'buffer', sheetRows: 200 });
 
             // Read ALL sheets/tabs and combine data
             const allData = [];
             workbook.SheetNames.forEach(sheetName => {
               const sheet = workbook.Sheets[sheetName];
-              const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+              const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
               allData.push({ sheetName, data: sheetData });
             });
 
@@ -101,31 +101,48 @@ function excelDateToJSDate(excelDate) {
 function parseSheetData(rows, type, sheetName) {
   if (!rows || rows.length === 0) return [];
   const data = [];
+  let consecutiveEmptyRows = 0;
+  const MAX_EMPTY_ROWS = 10; // Stop after 10 consecutive empty rows
 
   // Start from row 2 (skip header rows)
   for (let i = 2; i < rows.length; i++) {
     const row = rows[i];
-    if (!row || row.length === 0) continue;
+
+    // Check if row is completely empty or doesn't have required fields
+    const hasDate = row && row[1];
+    const hasSalesperson = row && row[14];
+
+    if (!hasDate && !hasSalesperson) {
+      consecutiveEmptyRows++;
+      if (consecutiveEmptyRows >= MAX_EMPTY_ROWS) {
+        console.log(`Stopping at row ${i} after ${MAX_EMPTY_ROWS} consecutive empty rows in ${sheetName}`);
+        break;
+      }
+      continue;
+    }
+
+    // Reset counter if we find data
+    if (hasDate || hasSalesperson) {
+      consecutiveEmptyRows = 0;
+    }
+
+    // Skip if missing required fields
+    if (!hasDate || !hasSalesperson) continue;
 
     // Parse date - handle both Excel serial dates and text dates
     let date = '';
-    if (row[1]) {
-      const rawDate = row[1];
-      if (typeof rawDate === 'number') {
-        date = excelDateToJSDate(rawDate);
-      } else {
-        date = String(rawDate);
-      }
+    const rawDate = row[1];
+    if (typeof rawDate === 'number') {
+      date = excelDateToJSDate(rawDate);
+    } else {
+      date = String(rawDate);
     }
 
-    const salesperson = row[14] ? String(row[14]) : '';  // Column O (index 14)
+    const salesperson = String(row[14]);
     const model = row[6] ? String(row[6]) : '';  // Column G (index 6)
     const frontEnd = parseFloat(row[9]) || 0;  // Column J (index 9)
     const backEnd = parseFloat(row[10]) || 0;  // Column K (index 10)
     const total = parseFloat(row[11]) || (frontEnd + backEnd);  // Column L (index 11)
-
-    // Skip rows without date or salesperson
-    if (!date || !salesperson) continue;
 
     data.push({
       date,
@@ -138,6 +155,7 @@ function parseSheetData(rows, type, sheetName) {
     });
   }
 
+  console.log(`Parsed ${data.length} records from ${sheetName} (${type})`);
   return data;
 }
 
