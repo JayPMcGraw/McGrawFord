@@ -114,7 +114,8 @@ function App() {
   );
 
   if (view === 'detail') {
-    const today = new Date().toISOString().split('T')[0];
+    // Use Central Time (US/Central) for "today" to match backend
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
     const currentYear = new Date().getFullYear();
 
     // Get available months from sales data - filter to current year only
