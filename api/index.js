@@ -89,6 +89,9 @@ function parseSheetData(rows, type, sheetName) {
   let consecutiveEmptyRows = 0;
   const MAX_EMPTY_ROWS = 10; // Stop after 10 consecutive empty rows
 
+  // Column mappings differ for New vs Used cars
+  const modelColumn = type === 'New' ? 8 : 6;  // New: Column I (index 8), Used: Column G (index 6)
+
   // Start from row 2 (skip header rows)
   for (let i = 2; i < rows.length; i++) {
     const row = rows[i];
@@ -137,7 +140,7 @@ function parseSheetData(rows, type, sheetName) {
     }
 
     const salesperson = String(row[14]);
-    const model = row[6] ? String(row[6]) : '';  // Column G (index 6)
+    const model = row[modelColumn] ? String(row[modelColumn]) : '';  // Column I for New, G for Used
     const frontEnd = parseFloat(row[9]) || 0;  // Column J (index 9)
     const backEnd = parseFloat(row[10]) || 0;  // Column K (index 10)
     const total = parseFloat(row[11]) || (frontEnd + backEnd);  // Column L (index 11)
