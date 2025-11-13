@@ -89,8 +89,18 @@ function parseSheetData(rows, type, sheetName) {
   let consecutiveEmptyRows = 0;
   const MAX_EMPTY_ROWS = 10; // Stop after 10 consecutive empty rows
 
-  // Column mappings differ for New vs Used cars
-  const modelColumn = type === 'New' ? 8 : 6;  // New: Column I (index 8), Used: Column G (index 6)
+  // Column mappings differ for New vs Used cars in November tabs
+  const columnMap = type === 'New' ? {
+    model: 8,      // Column I
+    frontEnd: 13,  // Column N
+    backEnd: 14,   // Column O
+    total: 15      // Column P
+  } : {
+    model: 6,      // Column G
+    frontEnd: 9,   // Column J
+    backEnd: 10,   // Column K
+    total: 11      // Column L
+  };
 
   // Start from row 2 (skip header rows)
   for (let i = 2; i < rows.length; i++) {
@@ -140,10 +150,10 @@ function parseSheetData(rows, type, sheetName) {
     }
 
     const salesperson = String(row[14]);
-    const model = row[modelColumn] ? String(row[modelColumn]) : '';  // Column I for New, G for Used
-    const frontEnd = parseFloat(row[9]) || 0;  // Column J (index 9)
-    const backEnd = parseFloat(row[10]) || 0;  // Column K (index 10)
-    const total = parseFloat(row[11]) || (frontEnd + backEnd);  // Column L (index 11)
+    const model = row[columnMap.model] ? String(row[columnMap.model]) : '';
+    const frontEnd = parseFloat(row[columnMap.frontEnd]) || 0;
+    const backEnd = parseFloat(row[columnMap.backEnd]) || 0;
+    const total = parseFloat(row[columnMap.total]) || (frontEnd + backEnd);
 
     data.push({
       date,
