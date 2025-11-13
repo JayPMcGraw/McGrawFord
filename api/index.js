@@ -89,20 +89,42 @@ function parseSheetData(rows, type, sheetName) {
   let consecutiveEmptyRows = 0;
   const MAX_EMPTY_ROWS = 10; // Stop after 10 consecutive empty rows
 
-  // Column mappings differ for New vs Used cars in November tabs
-  const columnMap = type === 'New' ? {
-    salesperson: 6,  // Column G
-    model: 8,        // Column I
-    frontEnd: 13,    // Column N
-    backEnd: 14,     // Column O
-    total: 15        // Column P
-  } : {
-    salesperson: 4,  // Column E
-    model: 6,        // Column G
-    frontEnd: 9,     // Column J
-    backEnd: 10,     // Column K
-    total: 11        // Column L
-  };
+  // Check if this is November tab (new column layout)
+  const isNovember = sheetName && sheetName.toLowerCase().includes('nov');
+
+  // Column mappings differ for New vs Used cars AND for November vs older months
+  let columnMap;
+
+  if (type === 'New') {
+    if (isNovember) {
+      // November: New column layout
+      columnMap = {
+        salesperson: 6,  // Column G
+        model: 8,        // Column I
+        frontEnd: 13,    // Column N
+        backEnd: 14,     // Column O
+        total: 15        // Column P
+      };
+    } else {
+      // August-October: Old column layout
+      columnMap = {
+        salesperson: 4,  // Column E
+        model: 6,        // Column G
+        frontEnd: 9,     // Column J (using total as both front and back)
+        backEnd: 9,      // Column J (same as front - old layout had single column)
+        total: 9         // Column J
+      };
+    }
+  } else {
+    // Used cars: Same layout for all months
+    columnMap = {
+      salesperson: 4,  // Column E
+      model: 6,        // Column G
+      frontEnd: 9,     // Column J
+      backEnd: 10,     // Column K
+      total: 11        // Column L
+    };
+  }
 
   // Start from row 2 (skip header rows)
   for (let i = 2; i < rows.length; i++) {
