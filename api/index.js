@@ -106,13 +106,13 @@ function parseSheetData(rows, type, sheetName) {
         total: 15        // Column P
       };
     } else {
-      // August-October: Old column layout
+      // August-October: Same layout as Used cars
       columnMap = {
         salesperson: 4,  // Column E
         model: 6,        // Column G
-        frontEnd: 9,     // Column J (using total as both front and back)
-        backEnd: 9,      // Column J (same as front - old layout had single column)
-        total: 9         // Column J
+        frontEnd: 9,     // Column J
+        backEnd: 10,     // Column K
+        total: 11        // Column L
       };
     }
   } else {
